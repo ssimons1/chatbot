@@ -90,11 +90,23 @@ ChatBot.sendMessage = function () {
             sendBtn.addClass("loading");
             ChatBot.write(chatInput.val(), "me");
             //Sending the user line to the server using the POST method
+
             $.post(ChatBot.SERVER_PATH + "/chat", {"msg": chatInput.val()}, function (result) {
                 if (typeof result != "undefined" && "msg" in result) {
+                    if ("end" in result) {
+
+                        setTimeout(function(){
+                         $(".chat-screen").html('');
+                        ChatBot.write("Hello, My name is Boto. What is yours?", "boto");
+                        return;
+                        }, 1500);
+
+
+                    }
                     ChatBot.setAnimation(result.animation);
                     ChatBot.write(result.msg, "boto");
                 } else {
+                    console.log('error')
                     //The server did not erred but we got an empty result (handling as error)
                     ChatBot.handleServerError("No result");
                 }
